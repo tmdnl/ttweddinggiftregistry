@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thomas & Tom's Wedding Gift Registry</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F7F6F4;color:#1C1B1A;min-height:100vh}
+button{all:unset;box-sizing:border-box;cursor:pointer;font-family:'DM Sans',sans-serif}
+.geo-header{position:relative;overflow:hidden;background:#1C1B1A;padding:3rem 2rem 2.5rem;text-align:center}
+.geo-header::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border:1px solid rgba(255,255,255,0.07);transform:rotate(15deg)}
+.geo-header::after{content:'';position:absolute;bottom:-70px;left:-30px;width:160px;height:160px;border:1px solid rgba(255,255,255,0.05);transform:rotate(30deg)}
+.gc{position:absolute;top:16px;left:16px;width:36px;height:36px;border-top:1px solid rgba(255,255,255,0.18);border-left:1px solid rgba(255,255,255,0.18)}
+.gcbr{position:absolute;bottom:16px;right:16px;width:36px;height:36px;border-bottom:1px solid rgba(255,255,255,0.18);border-right:1px solid rgba(255,255,255,0.18)}
+.eyebrow{font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:0.75rem}
+.htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:300;color:#ffffff;line-height:1.25;letter-spacing:0.02em}
+.htitle em{font-style:italic}
+.hdiv{display:flex;align-items:center;gap:0.75rem;justify-content:center;margin:1.25rem auto 0;max-width:160px}
+.hdiv::before,.hdiv::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.18)}
+.hdia{width:5px;height:5px;background:rgba(255,255,255,0.25);transform:rotate(45deg);flex-shrink:0}
+.admin-bar{background:#1C1B1A;padding:0.5rem 1.5rem;display:flex;justify-content:flex-end}
+.admin-link{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);padding:4px 0;display:inline-block}
+.admin-link:hover{color:rgba(255,255,255,0.75)}
+.stats-bar{background:#ffffff;border-bottom:1px solid #E8E6E2;padding:0.9rem 2rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.snum{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:#1C1B1A;line-height:1}
+.slabel{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#888684;margin-top:2px}
+.sdiv{width:1px;background:#E8E6E2;align-self:stretch;margin:4px 0}
+.filter-bar{padding:1rem 2rem;display:flex;gap:8px;justify-content:center;background:#ffffff;border-bottom:1px solid #E8E6E2;flex-wrap:wrap}
+.fb{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 16px;border:1px solid #1C1B1A;background:#1C1B1A;color:#ffffff;display:inline-block}
+.fb:hover{background:#333;border-color:#333}
+.registry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:#E8E6E2}
+.gift-card{background:#ffffff;padding:1.25rem;display:flex;flex-direction:column}
+.gift-card.claimed{background:#EDECE9}
+.gc-cat{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#888684;margin-bottom:0.4rem}
+.gc-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:#1C1B1A;margin-bottom:0.2rem;line-height:1.3}
+.gift-card.claimed .gc-name{color:#9A9793;text-decoration:line-through;text-decoration-color:#B0ADA8}
+.gc-note{font-size:12px;color:#888684;margin-bottom:0.75rem;line-height:1.5;flex:1}
+.gc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:0.75rem;border-top:1px solid #E8E6E2}
+.sbadge{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;display:flex;align-items:center;gap:4px;color:#4A4845}
+.sbadge.clmd{color:#9A9793}
+.sdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:#4A4845}
+.sbadge.clmd .sdot{background:#B0ADA8}
+.cbtn{font-size:11px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border:1px solid #1C1B1A;background:#1C1B1A;color:#ffffff;display:inline-block}
+.cbtn:hover{background:#333;border-color:#333}
+.cbtn.unc{border:1px solid #888684;background:#888684;color:#ffffff}
+.cbtn.unc:hover{background:#555;border-color:#555}
+.cbtn:disabled{opacity:0.5;cursor:not-allowed}
+.empty{text-align:center;padding:3.5rem 2rem;color:#888684;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;background:#ffffff;display:none}
+.loading{text-align:center;padding:3.5rem 2rem;color:#888684;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;background:#ffffff}
+.error-bar{background:#fee2e2;border-bottom:1px solid #fca5a5;color:#991b1b;padding:0.75rem 2rem;font-size:13px;text-align:center;display:none}
+.error-bar.show{display:block}
+.overlay{display:none;position:fixed;inset:0;background:rgba(28,27,26,0.6);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal-box{background:#ffffff;width:100%;max-width:420px;padding:1.75rem;position:relative}
+.modal-box::after{content:'';position:absolute;top:0;right:0;width:50px;height:50px;border-bottom:1px solid #E8E6E2;border-left:1px solid #E8E6E2}
+.mtitle{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:1.25rem;color:#1C1B1A}
+.merr{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:0.65rem;font-size:13px;margin-bottom:0.75rem;display:none}
+.merr.show{display:block}
+.mbody{font-size:13px;color:#4A4845;line-height:1.6;margin-bottom:0.25rem}
+.fg{margin-bottom:0.85rem}
+.fl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#4A4845;display:block;margin-bottom:5px}
+.fi{width:100%;padding:7px 9px;border:1px solid #D0CEC9;font-family:'DM Sans',sans-serif;font-size:14px;color:#1C1B1A;background:#ffffff;outline:none;border-radius:0;display:block}
+.fi:focus{border-color:#4A4845}
+.mactions{display:flex;gap:0.65rem;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid #E8E6E2;flex-wrap:wrap}
+.bp{font-size:11px;letter-spacing:0.07em;text-transform:uppercase;padding:7px 18px;background:#1C1B1A;color:#ffffff;border:1px solid #1C1B1A;display:inline-block}
+.bp:hover{background:#333;border-color:#333}
+.bs{font-size:11px;letter-spacing:0.07em;text-transform:uppercase;padding:7px 18px;background:#ffffff;color:#1C1B1A;border:1px solid #D0CEC9;display:inline-block}
+.bs:hover{background:#E8E6E2}
+@media(max-width:520px){.filter-bar{gap:6px}.fb{padding:5px 10px;font-size:10px}}
+</style>
+</head>
+<body>
+
+<div class="admin-bar">
+  <button class="admin-link" id="adminBtn" onclick="adminClick()">Admin</button>
+</div>
+
+<header class="geo-header">
+  <div class="gc"></div>
+  <div class="gcbr"></div>
+  <p class="eyebrow">Gift Registry</p>
+  <h1 class="htitle">Thomas <em>&</em> Tom's<br>Wedding Gift Registry</h1>
+  <div class="hdiv"><div class="hdia"></div></div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><div class="snum" id="tot">—</div><div class="slabel">Items</div></div>
+  <div class="sdiv"></div>
+  <div class="stat"><div class="snum" id="avl">—</div><div class="slabel">Available</div></div>
+  <div class="sdiv"></div>
+  <div class="stat"><div class="snum" id="clm">—</div><div class="slabel">Claimed</div></div>
+</div>
+
+<div class="filter-bar">
+  <button class="fb" onclick="setFilter('all',this)">All</button>
+  <button class="fb" onclick="setFilter('available',this)">Available</button>
+  <button class="fb" onclick="setFilter('claimed',this)">Claimed</button>
+</div>
+
+<div class="error-bar" id="errorBar">Unable to load registry. Please try refreshing the page.</div>
+
+<!-- Login overlay -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal-box">
+    <h2 class="mtitle">Admin Access</h2>
+    <div class="merr" id="loginErr">Incorrect password. Please try again.</div>
+    <div class="fg">
+      <label class="fl" for="pwInput">Password</label>
+      <input class="fi" type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="mactions">
+      <button class="bs" onclick="closeLogin()">Cancel</button>
+      <button class="bp" onclick="doLogin()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- Claim confirm overlay -->
+<div class="overlay" id="claimOverlay">
+  <div class="modal-box">
+    <h2 class="mtitle" id="claimTitle">Claim this gift?</h2>
+    <p class="mbody" id="claimBody"></p>
+    <div class="mactions">
+      <button class="bs" onclick="closeClaimOverlay()">Cancel</button>
+      <button class="bp" id="claimOkBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div id="rGrid" class="registry-grid"></div>
+  <div class="loading" id="loadingState">Loading registry...</div>
+  <div class="empty" id="emptyState">No items to display.</div>
+</main>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL_dml1Hmqioqiuhr6d0eJijmfRJ4e9KpHpl9Yh-JzkZ_WJ4SLZMJ-PRjQ7p5XJJ7a/exec';
+const PW = 'wedding2025';
+let items = [], filter = 'all', adminOn = false, pendingId = null, pendingAct = null;
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+async function loadItems() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('rGrid').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=getItems');
+    items = await res.json();
+    render();
+  } catch(e) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorBar').classList.add('show');
+  }
+}
+
+function setFilter(f, btn) { filter = f; render(); }
+
+function render() {
+  document.getElementById('loadingState').style.display = 'none';
+  const tot = items.length, clmd = items.filter(i => i.claimed).length;
+  document.getElementById('tot').textContent = tot;
+  document.getElementById('avl').textContent = tot - clmd;
+  document.getElementById('clm').textContent = clmd;
+  let vis = items;
+  if (filter === 'available') vis = items.filter(i => !i.claimed);
+  if (filter === 'claimed') vis = items.filter(i => i.claimed);
+  const grid = document.getElementById('rGrid');
+  const empty = document.getElementById('emptyState');
+  if (vis.length === 0) {
+    grid.style.display = 'none'; empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none'; grid.style.display = 'grid';
+    grid.innerHTML = vis.map(it => `
+      <div class="gift-card${it.claimed?' claimed':''}">
+        <div class="gc-cat">${esc(it.category)}</div>
+        <div class="gc-name">${esc(it.name)}</div>
+        <div class="gc-note">${esc(it.note)}</div>
+        <div class="gc-footer">
+          <span class="sbadge${it.claimed?' clmd':''}"><span class="sdot"></span>${it.claimed?'Claimed':'Available'}</span>
+          <button class="cbtn${it.claimed?' unc':''}" onclick="openClaim(${it.id},${it.claimed})">${it.claimed?'Unmark':'Claim'}</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function adminClick() {
+  if (adminOn) return;
+  document.getElementById('loginErr').classList.remove('show');
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('pwInput').focus(), 50);
+}
+
+function doLogin() {
+  if (document.getElementById('pwInput').value === PW) {
+    adminOn = true;
+    document.getElementById('loginOverlay').classList.remove('open');
+    document.getElementById('adminBtn').textContent = 'Admin ✓';
+  } else {
+    document.getElementById('loginErr').classList.add('show');
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+function closeLogin() { document.getElementById('loginOverlay').classList.remove('open'); }
+
+function openClaim(id, isClaimed) {
+  pendingId = id; pendingAct = isClaimed ? 'unc' : 'clm';
+  const it = items.find(i => i.id === id); if (!it) return;
+  if (isClaimed) {
+    document.getElementById('claimTitle').textContent = 'Remove claim?';
+    document.getElementById('claimBody').textContent = '"' + it.name + '" will be marked as available again.';
+    document.getElementById('claimOkBtn').textContent = 'Yes, unmark it';
+  } else {
+    document.getElementById('claimTitle').textContent = 'Claim this gift?';
+    document.getElementById('claimBody').textContent = '"' + it.name + '" will show as claimed so others know it\'s taken.';
+    document.getElementById('claimOkBtn').textContent = "Yes, I'll get this";
+  }
+  document.getElementById('claimOkBtn').onclick = doClaim;
+  document.getElementById('claimOverlay').classList.add('open');
+}
+
+async function doClaim() {
+  const it = items.find(i => i.id === pendingId); if (!it) return;
+  const newClaimed = (pendingAct === 'clm');
+  closeClaimOverlay();
+  it.claimed = newClaimed;
+  render();
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'claimItem', id: pendingId, claimed: newClaimed })
+    });
+  } catch(e) {
+    it.claimed = !newClaimed;
+    render();
+    document.getElementById('errorBar').textContent = 'Could not save change. Please try again.';
+    document.getElementById('errorBar').classList.add('show');
+    setTimeout(() => document.getElementById('errorBar').classList.remove('show'), 4000);
+  }
+}
+
+function closeClaimOverlay() { document.getElementById('claimOverlay').classList.remove('open'); }
+
+document.getElementById('loginOverlay').addEventListener('click', function(e){ if(e.target===this) closeLogin(); });
+document.getElementById('claimOverlay').addEventListener('click', function(e){ if(e.target===this) closeClaimOverlay(); });
+
+loadItems();
+</script>
+</body>
+</html>
